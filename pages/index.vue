@@ -35,12 +35,16 @@ import Settings from "~/components/custom/home/settings.vue";
           <div>
             <div class="grid gap-2">
               <div class="grid gap-2">
-                <Button>
-                  First mode
-                </Button>
-                <Button>
-                  Second mode
-                </Button>
+                <NuxtLink to="/game">
+                  <Button>
+                    Play with EEG
+                  </Button>
+                </NuxtLink>
+                <NuxtLink to="/game">
+                  <Button>
+                    Play without EEG
+                  </Button>
+                </NuxtLink>
                 <Settings variant="outline" class="w-max w-full" />
               </div>
             </div>
