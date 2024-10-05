@@ -49,10 +49,8 @@ export class Player {
     const world = this.world;
 // fbx 找了免费能放的地方 我们自己的网站没有设定 CORS
     world.loadFbx('player', '/player@skateboarding.fbx', true);
-    //  world.loadFbx('player', 'http://www.tamarts.com/Downloads/player@skateboarding.fbx', true);
     world.loadFbx('playerDying', '/player@dying.fbx', false);
     world.loadFbx('snowboard', '/snowboard.fbx', true);
-    //  world.loadFbx('snowboard', 'https://github.com/makoto425/ue3d/blob/master/snowboard.fbx', true);
 
 
     world.onLoaded(() => {
@@ -214,7 +212,7 @@ export class Player {
     // Acceleration
     this.speed += t * 9.81;
     // Maximum velocity
-    this.speed = Math.min(this.speed, 1000);
+    this.speed = Math.min(this.speed, 500);
 
     // Calculate displacement vectors
     let trueBearingX = t * this.speed * Math.cos(this.bearing + Math.PI / 2);
