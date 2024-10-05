@@ -43,7 +43,7 @@ onMounted(() => {
     if (event.code === 'Enter' && player.timeOfDeath) {
       dead.value = false
       world.teardown();
-      setTimeout(() => initiateGame(), 2000);
+      setTimeout(() => initiateGame(), 200);
     }
   });
 });
@@ -76,14 +76,6 @@ onMounted(() => {
 </template>
 
 <style>
-html, body {
-  height: 100%;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-}
-
 canvas {
   width: 100%;
   height: 100%;
@@ -93,120 +85,6 @@ canvas {
 
 div {
   user-select: none;
-}
-
-.label-death {
-  display: none;
-  z-index: 10;
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10rem;
-  color: white;
-
-  &.active {
-    display: block;
-  }
-}
-
-.label-death-bg {
-  content: " ";
-  z-index: 9;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 20rem;
-  transform: translate(-50%, -50%);
-  transition: all 2s ease;
-  background-color: black;
-  opacity: 0.7;
-
-  &.active {
-    top: 50%;
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.label-score {
-  z-index: 10;
-  position: absolute;
-  left: 5vw;
-  bottom: 5vh;
-  font-size: 10rem;
-  transition: all 500ms ease;
-  color: black;
-
-  &.stopped {
-    top: 50%;
-    left: 50%;
-    bottom: auto;
-    font-size: 15rem;
-    transform: translate(-50%, -50%);
-    color: white;
-  }
-}
-
-.label-speed {
-  z-index: 5;
-  position: absolute;
-  left: 5vw;
-  bottom: 20vh;
-  font-size: 8rem;
-  transition: all 500ms ease;
-  color: black;
-
-  &.stopped {
-    top: 50%;
-    left: 50%;
-    bottom: auto;
-    font-size: 8rem;
-    transform: translate(-50%, -50%);
-    color: white;
-  }
-
-
-}
-
-
-.label-restart {
-  display: none;
-  z-index: 100;
-  position: absolute;
-  padding: 1rem 2rem;
-  top: 75%;
-  left: 50%;
-  width: 100%;
-  text-align: center;
-  font-size: 5rem;
-  color: white;
-  transform: translate(-50%, -50%);
-
-  &.active {
-    display: block;
-  }
-}
-.page-footer {
-  position: fixed;
-  right: 35px;
-  bottom: 20px;
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  color: black;
-  background: rgba(255, 255, 255, 0.65);
-}
-
-.page-footer a {
-  display: flex;
-  margin-left: 4px;
-}
-.profile_picture{
-  bottom: 0px;
-  width:30px;
-  height:30px;
 }
 
 kbd {
