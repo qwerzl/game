@@ -72,7 +72,6 @@ export class Mountain {
     const groundGeo = new BoxGeometry(this.STAGE_WIDTH, 100, this.STAGE_LENGTH);
     const groundMat = new MeshStandardMaterial({ color: 0xfdedd7 });
     const ground = new Mesh(groundGeo, groundMat);
-    console.log(ground)
     ground.receiveShadow = true;
     this.world.scene!.add(ground);
     ground.position.y -= 50;

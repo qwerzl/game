@@ -8,7 +8,6 @@ const loadingManager = useState<LoadingManager>('loadingManager')
 
 export default function(name: string, filename: string, scene: ShallowRef<TresScene>, addToScene = false) {
   const fbxLoader = new FBXLoader(loadingManager.value);
-  console.log("fbxLoader", loadingManager.value)
   console.log("Loading FBX: " + filename);
 
   fbxLoader.load(

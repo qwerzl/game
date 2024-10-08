@@ -61,7 +61,6 @@ export class Player {
       this.model = player;
       let footBone: Bone | undefined = undefined;
       player.traverse((child: Bone) => {
-        console.log(child.name)
         if (child.type === 'Bone' &&
           child.name === 'mixamorigLeftFoot') {
             footBone = child;
