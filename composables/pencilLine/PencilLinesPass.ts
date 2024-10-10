@@ -1,6 +1,6 @@
-import * as THREE from 'three'
-import { FullScreenQuad, Pass } from 'three/examples/jsm/postprocessing/Pass'
+import { Pass, FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass'
 import { PencilLinesMaterial } from './PencilLinesMaterial'
+import * as THREE from 'three'
 
 export class PencilLinesPass extends Pass {
   fsQuad: FullScreenQuad
@@ -12,11 +12,11 @@ export class PencilLinesPass extends Pass {
   camera: THREE.Camera
 
   constructor({
-    width,
+                width,
                 height,
                 scene,
-                camera,
-  }: {
+                camera
+              }: {
     width: number
     height: number
     scene: THREE.Scene
@@ -58,7 +58,7 @@ export class PencilLinesPass extends Pass {
   render(
     renderer: THREE.WebGLRenderer,
     writeBuffer: THREE.WebGLRenderTarget,
-    readBuffer: THREE.WebGLRenderTarget,
+    readBuffer: THREE.WebGLRenderTarget
   ) {
     renderer.setRenderTarget(this.normalBuffer)
     const overrideMaterialValue = this.scene.overrideMaterial
@@ -73,11 +73,9 @@ export class PencilLinesPass extends Pass {
     if (this.renderToScreen) {
       renderer.setRenderTarget(null)
       this.fsQuad.render(renderer)
-    }
-    else {
+    } else {
       renderer.setRenderTarget(writeBuffer)
-      if (this.clear)
-        renderer.clear()
+      if (this.clear) renderer.clear()
       this.fsQuad.render(renderer)
     }
   }

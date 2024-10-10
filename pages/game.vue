@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import { PencilLinesPass } from '~/composables/pencilLine/PencilLinesPass'
-import { Mountain } from '~/lib/mountain'
-
-import { Player } from '~/lib/player'
-import { RpgCamera } from '~/lib/rpgCamera'
-import { World } from '~/lib/world'
-import { useEegConfigStore } from '~/stores/config'
+import { useTemplateRef, onMounted } from 'vue'
+import { PencilLinesPass } from "~/composables/pencilLine/PencilLinesPass"
+import {useEegConfigStore} from "~/stores/config";
 
 const config = useEegConfigStore()
+
+import { World } from '~/lib/world'
+import { Player } from '~/lib/player'
+import { Mountain } from '~/lib/mountain'
+import { RpgCamera } from '~/lib/rpgCamera'
 
 let world: World
 let player: Player
@@ -25,10 +25,10 @@ onMounted(async () => {
       config.startCollection()
     }
 
-    world = new World(window)
-    player = new Player(world)
-    mountain = new Mountain(world, player)
-    camera = new RpgCamera(world, player)
+    world = new World(window);
+    player = new Player(world);
+    mountain = new Mountain(world, player);
+    camera = new RpgCamera(world, player);
     world.setupEffectComposer(camera)
     world.addEffect(PencilLinesPass, camera)
 
@@ -37,58 +37,51 @@ onMounted(async () => {
         if (!player.timeOfDeath) {
           score.value = Math.round(world.clock!.elapsedTime * 10)
           console.log(config.currentAttentionLevel)
-        }
-        else {
+        } else {
           config.stopCollection()
           console.log(config.stats)
           dead.value = true
         }
-      })
-    })
+      });
+    });
 
-    world.render()
+    world.render();
   }
 
-  initiateGame()
+  initiateGame();
 
-  window.addEventListener('keydown', (event) => {
+  window.addEventListener('keydown', event => {
     if (event.code === 'Enter' && player.timeOfDeath) {
       dead.value = false
-      world.teardown()
-      setTimeout(() => initiateGame(), 200)
+      world.teardown();
+      setTimeout(() => initiateGame(), 200);
     }
-  })
-})
+  });
+});
 </script>
 
 <template>
   <ClientOnly>
-    <div class="absolute top-5 left-5 text-black text-xl" :class="{ hidden: dead }">
-      <div ref="label-score">
-        {{ score }}
-      </div>
-    </div>
-    <div class="absolute h-screen w-screen text-black">
-      <div class="h-screen flex items-center justify-center text-xl font-bold" :class="{ hidden: !dead }">
-        <div class="flex-col items-center space-y-2">
-          <div ref="label-death" class="h-full text-center">
-            You scored
-          </div>
-          <div ref="label-death-bg" class="h-full text-center text-6xl">
-            {{ score }}
-          </div>
-          <div ref="label-restart" class="h-full text-center flex">
-            <p>
-              Press
-            </p>
-            <kbd class="mx-2 text-xs">Enter</kbd>
-            <p>
-              to restart
-            </p>
-          </div>
+  <div class="absolute top-5 left-5 text-black text-xl" :class="{ hidden: dead }" >
+    <div ref="label-score">{{score}}</div>
+  </div>
+  <div class="absolute h-screen w-screen text-black">
+    <div class="h-screen flex items-center justify-center text-xl font-bold" :class="{ hidden: !dead }">
+      <div class="flex-col items-center space-y-2">
+        <div ref="label-death" class="h-full text-center">You scored</div>
+        <div ref="label-death-bg" class="h-full text-center text-6xl">{{score}}</div>
+        <div ref="label-restart" class="h-full text-center flex">
+          <p>
+            Press
+          </p>
+          <kbd class="mx-2 text-xs">Enter</kbd>
+          <p>
+            to restart
+          </p>
         </div>
       </div>
     </div>
+  </div>
   </ClientOnly>
 </template>
 

@@ -1,52 +1,51 @@
-import { Skeleton } from 'three'
+import {type Group, Skeleton, type SkinnedMesh} from "three";
 
-export function cloneFbx(fbx: any) {
-  const clone = fbx.clone(true)
-  clone.animations = fbx.animations
-  clone.skeleton = { bones: [] }
+export const cloneFbx = (fbx: any) => {
+  const clone = fbx.clone(true);
+  clone.animations = fbx.animations;
+  clone.skeleton = { bones: [] };
 
-  const skinnedMeshes: any = {}
+  const skinnedMeshes: any = {};
 
-  fbx.traverse((node) => {
+  fbx.traverse(node => {
     if (node.isSkinnedMesh) {
-      skinnedMeshes[node.name] = node
+      skinnedMeshes[node.name] = node;
     }
-  })
+  });
 
-  const cloneBones = {}
-  const cloneSkinnedMeshes = {}
+  const cloneBones = {};
+  const cloneSkinnedMeshes = {};
 
-  clone.traverse((node) => {
+  clone.traverse(node => {
     if (node.isBone) {
-      cloneBones[node.name] = node
+      cloneBones[node.name] = node;
     }
 
     if (node.isSkinnedMesh) {
-      cloneSkinnedMeshes[node.name] = node
+      cloneSkinnedMeshes[node.name] = node;
     }
-  })
+  });
 
-  for (const name in skinnedMeshes) {
-    const skinnedMesh = skinnedMeshes[name]
-    const skeleton = skinnedMesh.skeleton
-    const cloneSkinnedMesh = cloneSkinnedMeshes[name]
+  for (let name in skinnedMeshes) {
+    const skinnedMesh = skinnedMeshes[name];
+    const skeleton = skinnedMesh.skeleton;
+    const cloneSkinnedMesh = cloneSkinnedMeshes[name];
 
-    const orderedCloneBones = []
+    const orderedCloneBones = [];
 
     for (let i = 0; i < skeleton.bones.length; i++) {
-      const cloneBone = cloneBones[skeleton.bones[i].name]
-      orderedCloneBones.push(cloneBone)
+      const cloneBone = cloneBones[skeleton.bones[i].name];
+      orderedCloneBones.push(cloneBone);
     }
 
     cloneSkinnedMesh.bind(
       new Skeleton(orderedCloneBones, skeleton.boneInverses),
-      cloneSkinnedMesh.matrixWorld,
-    )
+      cloneSkinnedMesh.matrixWorld);
 
     // For animation to work correctly:
-    clone.skeleton.bones.push(cloneSkinnedMesh)
-    clone.skeleton.bones.push(...orderedCloneBones)
+    clone.skeleton.bones.push(cloneSkinnedMesh);
+    clone.skeleton.bones.push(...orderedCloneBones);
   }
 
-  return clone
-}
+  return clone;
+};

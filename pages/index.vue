@@ -2,29 +2,31 @@
 import { Button } from '@/components/ui/button'
 
 import eegConfig from '~/components/custom/home/eegConfig.vue'
-import Settings from '~/components/custom/home/settings.vue'
-import { useEegConfigStore } from '~/stores/config'
+import Settings from "~/components/custom/home/settings.vue";
+import {useEegConfigStore} from "~/stores/config";
 
 const config = useEegConfigStore()
 
 async function beginGame(eeg: boolean) {
-  config.enabled = eeg
+  config.enabled = eeg;
   await navigateTo('/game')
 }
+
 </script>
 
 <template>
+
   <div class="container relative h-screen flex items-center justify-center max-w-none px-0">
-    <eeg-config class="absolute md:right-4 md:top-4 right-2 top-2" />
+    <eeg-config class='absolute md:right-4 md:top-4 right-2 top-2' />
 
     <div>
       <div class="flex items-center justify-center mb-6">
         <div class="w-40 h-40">
           <AspectRatio :ratio="1" class="bg-muted">
             <NuxtImg
-              src="/ski.png"
-              alt="MindSki"
-              class="rounded-md object-cover w-full h-full"
+                src="/ski.png"
+                alt="MindSki"
+                class="rounded-md object-cover w-full h-full"
             />
           </AspectRatio>
         </div>
@@ -42,7 +44,7 @@ async function beginGame(eeg: boolean) {
           <div>
             <div class="grid gap-2">
               <div class="grid gap-2">
-                <Button :disabled="!config.port" @click="beginGame(true)">
+                <Button @click="beginGame(true)" :disabled="!config.port">
                   Play with EEG
                 </Button>
                 <Button @click="beginGame(false)">
@@ -56,15 +58,15 @@ async function beginGame(eeg: boolean) {
         <p class="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our
           <a
-            href="/terms"
-            class="underline underline-offset-4 hover:text-primary"
+              href="/terms"
+              class="underline underline-offset-4 hover:text-primary"
           >
             Terms of Service
           </a>
           and
           <a
-            href="/privacy"
-            class="underline underline-offset-4 hover:text-primary"
+              href="/privacy"
+              class="underline underline-offset-4 hover:text-primary"
           >
             Privacy Policy
           </a>
