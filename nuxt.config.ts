@@ -12,12 +12,13 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@pinia/nuxt",
     '@tresjs/nuxt',
+    "nuxt-workers"
   ],
   vite: {
     plugins: [glsl()]
   },
   routeRules: {
     // Homepage pre-rendered at build time
-    '/game': { ssr: false },
+    '/**': { ssr: false },
   }
 })

@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { useTemplateRef, onMounted } from 'vue'
 import { PencilLinesPass } from "~/composables/pencilLine/PencilLinesPass"
+import {useEegConfigStore} from "~/stores/config";
+
+const config = useEegConfigStore()
 
 import { World } from '~/lib/world'
 import { Player } from '~/lib/player'
@@ -15,7 +18,7 @@ let camera: RpgCamera
 const dead = ref(false)
 const score = ref(0)
 
-onMounted(() => {
+onMounted(async () => {
   function initiateGame() {
     world = new World(window);
     player = new Player(world);
@@ -25,10 +28,13 @@ onMounted(() => {
     world.addEffect(PencilLinesPass, camera)
 
     world.onLoaded(() => {
-      world.onRender(t => {
+      world.onRender(() => {
         if (!player.timeOfDeath) {
           score.value = Math.round(world.clock!.elapsedTime * 10)
+          console.log(config.currentAttentionLevel)
         } else {
+          config.stopCollection()
+          console.log(config.stats)
           dead.value = true
         }
       });
@@ -48,6 +54,10 @@ onMounted(() => {
   });
 });
 
+if (config.enabled) {
+  console.log('EEG enabled')
+  config.startCollection()
+}
 </script>
 
 <template>

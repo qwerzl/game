@@ -3,6 +3,15 @@ import { Button } from '@/components/ui/button'
 
 import eegConfig from '~/components/custom/home/eegConfig.vue'
 import Settings from "~/components/custom/home/settings.vue";
+import {useEegConfigStore} from "~/stores/config";
+
+const config = useEegConfigStore()
+
+async function beginGame(eeg: boolean) {
+  config.enabled = eeg;
+  await navigateTo('/game')
+}
+
 </script>
 
 <template>
@@ -35,17 +44,13 @@ import Settings from "~/components/custom/home/settings.vue";
           <div>
             <div class="grid gap-2">
               <div class="grid gap-2">
-                <Button as-child>
-                  <NuxtLink to="/game">
-                    Play with EEG
-                  </NuxtLink>
+                <Button @click="beginGame(true)" :disabled="!config.port">
+                  Play with EEG
                 </Button>
-                <Button as-child>
-                  <NuxtLink to="/game">
-                    Play without EEG
-                  </NuxtLink>
+                <Button @click="beginGame(false)">
+                  Play without EEG
                 </Button>
-                <Settings variant="outline" class="w-max w-full" />
+                <Settings variant="outline" class="w-max" />
               </div>
             </div>
           </div>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {cn} from "~/lib/utils";
 import {buttonVariants} from "~/components/ui/button";
 import {useEegConfigStore} from "~/stores/config";
@@ -7,6 +6,14 @@ import {useEegConfigStore} from "~/stores/config";
 const props = defineProps(['class'])
 
 const config = useEegConfigStore()
+
+const eegSupported = ref(false)
+
+onMounted(() => {
+  if ("serial" in navigator) {
+    eegSupported.value = true
+  }
+})
 </script>
 
 <template>
@@ -18,11 +25,11 @@ const config = useEegConfigStore()
             props.class,
           )"
       >
-        <Button class="rounded p-1 w-6 h-6 flex items-center" :variant="config.enabled ? 'constructive' : 'destructive'">
+        <Button class="rounded p-1 w-6 h-6 flex items-center" :variant="config.port ? 'constructive' : 'destructive'">
           <Icon name="mdi:connection" />
         </Button>
         <div class="pl-2">
-          {{ config.enabled ? 'Connected' : 'Not Connected' }}
+          {{ config.port ? 'Connected' : 'Not Connected' }}
         </div>
       </a>
     </DrawerTrigger>
@@ -35,14 +42,16 @@ const config = useEegConfigStore()
       <div class="flex flex-row items-center justify-between rounded-lg border p-4 mx-4">
         <div class="space-y-0.5">
           <div class="text-base font-medium">
-            Toggle EEG Status
+            Select EEG Device
           </div>
           <div class="text-sm text-muted-foreground">
-            Test
+            Select your EEG device here
           </div>
         </div>
         <div>
-          <Switch :checked="config.enabled" @update:checked="config.$patch({ enabled: !(config.enabled) })" />
+          <Button variant="outline" :disabled="!eegSupported || config.port" @click="config.connectEeg()">
+            {{ config.port ? 'Connected' : eegSupported ? 'Connect' : 'Not Supported' }}
+          </Button>
         </div>
       </div>
 

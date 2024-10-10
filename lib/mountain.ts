@@ -6,30 +6,30 @@ import {
   Fog,
   Mesh,
   MeshBasicMaterial,
-  MeshLambertMaterial, MeshStandardMaterial,
+  MeshLambertMaterial,
+  MeshStandardMaterial,
   RepeatWrapping,
   type Texture,
-  TextureLoader
+  TextureLoader,
 } from "three";
 import { cloneFbx } from "~/composables/cloneFbx";
 
 export class Mountain {
-  world: World
-  player: Player
-  N_VISIBLE_TREES: number
-  TREES_LOD: number
-  STAGE_WIDTH: number
-  STAGE_LENGTH: number
-  trees: any[]
-  grounds: any[]
-  groundCount: number
-  snowMap: Texture
+  world: World;
+  player: Player;
+  N_VISIBLE_TREES: number;
+  TREES_LOD: number;
+  STAGE_WIDTH: number;
+  STAGE_LENGTH: number;
+  trees: any[];
+  grounds: any[];
+  groundCount: number;
 
   constructor(world: World, player: Player) {
     this.world = world;
     this.player = player;
 
-    this.N_VISIBLE_TREES = 50;
+    this.N_VISIBLE_TREES = 10;
     this.TREES_LOD = 1000;
     this.STAGE_WIDTH = 750;
     this.STAGE_LENGTH = 10000;
@@ -37,33 +37,32 @@ export class Mountain {
     this.groundCount = 0;
     this.grounds = [];
 
-    const snowMap = new TextureLoader().load('https://repo.bfw.wiki/bfwrepo/images/ski/snow.jpg');
-    snowMap.wrapS = RepeatWrapping;
-    snowMap.wrapT = RepeatWrapping;
-    snowMap.repeat.set(this.STAGE_WIDTH / 100, this.STAGE_LENGTH / 100);
-    this.snowMap = snowMap;
+    // const snowMap = new TextureLoader().load('https://repo.bfw.wiki/bfwrepo/images/ski/snow.jpg');
+    // snowMap.wrapS = RepeatWrapping;
+    // snowMap.wrapT = RepeatWrapping;
+    // snowMap.repeat.set(this.STAGE_WIDTH / 100, this.STAGE_LENGTH / 100);
+    // this.snowMap = snowMap;
 
     // Fog
     // this.world.scene!.fog = new Fog(0xeeeeee, 100, this.TREES_LOD);
 
-    this.world.loadFbx('tree', '/PineTree_003.fbx', false);
+    this.world.loadFbx("tree", "/PineTree_003.fbx", false);
     // this.world.loadFbx('tree', 'fbx/tree.gltf', false);
     //this.world.loadFbx('tree', 'http://www.dhcofi.com/wp-content/uploads/2024/07/tree.fbx', false);
     this.world.onLoaded(() => {
       // Create first ground iteration
       this.createGround();
-      const tree = this.world.loadedFbx['tree'];
+      const tree = this.world.loadedFbx["tree"];
       tree.scale.set(0.5, 0.5, 0.5);
-      tree.traverse(m => {
-        if (m.type === 'SkinnedMesh' ||
-          m.type === 'Mesh') {
+      tree.traverse((m) => {
+        if (m.type === "SkinnedMesh" || m.type === "Mesh") {
           m.castShadow = true;
         }
       });
       tree.rotation.x = -Math.PI / 16;
       tree.position.y = -10;
       tree.children[0].material;
-      this.world.onRender(t => this.render(t));
+      this.world.onRender((t) => this.render(t));
     });
   }
 
@@ -90,31 +89,39 @@ export class Mountain {
     rightWall.position.y = 150;
     rightWall.rotation.z = -Math.PI / 4;
 
-    ground.position.z += this.groundCount * this.STAGE_LENGTH + this.STAGE_LENGTH / 2;
-    leftWall.position.z += this.groundCount * this.STAGE_LENGTH + this.STAGE_LENGTH / 2;
-    rightWall.position.z += this.groundCount * this.STAGE_LENGTH + this.STAGE_LENGTH / 2;
+    ground.position.z +=
+      this.groundCount * this.STAGE_LENGTH + this.STAGE_LENGTH / 2;
+    leftWall.position.z +=
+      this.groundCount * this.STAGE_LENGTH + this.STAGE_LENGTH / 2;
+    rightWall.position.z +=
+      this.groundCount * this.STAGE_LENGTH + this.STAGE_LENGTH / 2;
 
-    this.grounds.push({ index: this.groundCount++, ground, leftWall, rightWall });
+    this.grounds.push({
+      index: this.groundCount++,
+      ground,
+      leftWall,
+      rightWall,
+    });
   }
 
   disposeGround(index: number) {
     // TODO: check proper disposal
     const grounds = this.grounds;
-    let ground = grounds.find(g => g.index === index);
+    let ground = grounds.find((g) => g.index === index);
     this.world.scene!.remove(ground);
     grounds.splice(grounds.indexOf(ground), 1);
-    ground.ground.traverse(t => {
-      if (typeof t.dispose === 'function') {
+    ground.ground.traverse((t) => {
+      if (typeof t.dispose === "function") {
         t.dispose();
       }
     });
-    ground.leftWall.traverse(t => {
-      if (typeof t.dispose === 'function') {
+    ground.leftWall.traverse((t) => {
+      if (typeof t.dispose === "function") {
         t.dispose();
       }
     });
-    ground.rightWall.traverse(t => {
-      if (typeof t.dispose === 'function') {
+    ground.rightWall.traverse((t) => {
+      if (typeof t.dispose === "function") {
         t.dispose();
       }
     });
@@ -124,7 +131,7 @@ export class Mountain {
   addTree() {
     // must be called after onLoaded
     const world = this.world;
-    const treeBase = world.loadedFbx['tree'];
+    const treeBase = world.loadedFbx["tree"];
     const tree = cloneFbx(treeBase);
     this.trees.push(tree);
     world.scene!.add(tree);
@@ -132,7 +139,10 @@ export class Mountain {
     // Calculate random position
     const p = this.player;
     const x = Math.random() * this.STAGE_WIDTH - this.STAGE_WIDTH / 2;
-    const z = p.position.z + this.TREES_LOD * (3 / 4) + Math.random() * this.TREES_LOD * 2;
+    const z =
+      p.position.z +
+      this.TREES_LOD * (3 / 4) +
+      Math.random() * this.TREES_LOD * 2;
     Object.assign(tree.position, { x, z });
 
     // Precalc intersection bounding box
@@ -150,8 +160,8 @@ export class Mountain {
     const trees = this.trees;
     this.world.scene!.remove(tree);
     trees.splice(trees.indexOf(tree), 1);
-    tree.traverse(t => {
-      if (typeof t.dispose === 'function') {
+    tree.traverse((t) => {
+      if (typeof t.dispose === "function") {
         t.dispose();
       }
     });
@@ -163,12 +173,14 @@ export class Mountain {
     const player = this.player;
     const playerBox = new Box3().setFromObject(player.model);
 
-    if (player.position.x < -this.STAGE_WIDTH / 2 ||
-      player.position.x > this.STAGE_WIDTH / 2) {
+    if (
+      player.position.x < -this.STAGE_WIDTH / 2 ||
+      player.position.x > this.STAGE_WIDTH / 2
+    ) {
       player.die();
     }
 
-    trees.forEach(tree => {
+    trees.forEach((tree) => {
       const intersects = playerBox.intersectsBox(tree.collisionBoundingBox);
       if (intersects) {
         player.die();
@@ -183,7 +195,7 @@ export class Mountain {
     this.checkCollision();
 
     // Cull trees behind player
-    trees = trees.filter(tree => {
+    trees = trees.filter((tree) => {
       if (tree.position.z < p.position.z - this.TREES_LOD) {
         this.disposeTree(tree);
         return false;
@@ -204,4 +216,5 @@ export class Mountain {
       this.disposeGround(this.groundCount - 1);
       this.createGround();
     }
-  }}
+  }
+}
