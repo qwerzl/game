@@ -20,6 +20,11 @@ const score = ref(0)
 
 onMounted(async () => {
   function initiateGame() {
+    if (config.enabled) {
+      console.log('EEG enabled')
+      config.startCollection()
+    }
+
     world = new World(window);
     player = new Player(world);
     mountain = new Mountain(world, player);
@@ -53,11 +58,6 @@ onMounted(async () => {
     }
   });
 });
-
-if (config.enabled) {
-  console.log('EEG enabled')
-  config.startCollection()
-}
 </script>
 
 <template>
