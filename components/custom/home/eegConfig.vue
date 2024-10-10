@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {cn} from "~/lib/utils";
-import {buttonVariants} from "~/components/ui/button";
-import {useEegConfigStore} from "~/stores/config";
+import { buttonVariants } from '~/components/ui/button'
+import { cn } from '~/lib/utils'
+import { useEegConfigStore } from '~/stores/config'
 
 const props = defineProps(['class'])
 
@@ -10,7 +10,7 @@ const config = useEegConfigStore()
 const eegSupported = ref(false)
 
 onMounted(() => {
-  if ("serial" in navigator) {
+  if ('serial' in navigator) {
     eegSupported.value = true
   }
 })
@@ -20,10 +20,10 @@ onMounted(() => {
   <Drawer>
     <DrawerTrigger>
       <a
-          :class="cn(
-            buttonVariants({ variant: 'ghost' }),
-            props.class,
-          )"
+        :class="cn(
+          buttonVariants({ variant: 'ghost' }),
+          props.class,
+        )"
       >
         <Button class="rounded p-1 w-6 h-6 flex items-center" :variant="config.port ? 'constructive' : 'destructive'">
           <Icon name="mdi:connection" />

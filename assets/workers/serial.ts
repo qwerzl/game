@@ -1,25 +1,25 @@
-const attentionLevelStats = new Map<number, number>
+const attentionLevelStats = new Map<number, number>()
 
 async function serialDataCollection() {
   const startTimestamp = performance.now()
 
   const bytesQueue: number[] = []
-  const ports = await navigator.serial.getPorts();
+  const ports = await navigator.serial.getPorts()
   const port = ports[0]
   await port.open({ baudRate: 57600 })
 
   let sum = 0
 
-  const reader = port.readable?.getReader();
+  const reader = port.readable?.getReader()
 
-// Listen to data coming from the serial device.
+  // Listen to data coming from the serial device.
   while (true) {
     if (reader) {
-      const { value, done } = await reader.read();
+      const { value, done } = await reader.read()
       if (done) {
         // Allow the serial port to be closed later.
-        reader.releaseLock();
-        break;
+        reader.releaseLock()
+        break
       }
 
       // Begin parsing the data.
@@ -30,7 +30,9 @@ async function serialDataCollection() {
         }
         else if (bytesQueue.length === 1 && byte === 0xAA) {
           // Second 0xAA: Sync
-          if (byte === 0xAA) bytesQueue.push(byte)
+          if (byte === 0xAA) {
+            bytesQueue.push(byte)
+          }
           else {
             bytesQueue.length = 0
             sum = 0
@@ -38,19 +40,21 @@ async function serialDataCollection() {
         }
         else if (bytesQueue.length === 2) {
           // 0x20: Packet Length, indicating it's a big packet of 32 bytes. We don't need small packets here.
-          if (byte === 0x20) bytesQueue.push(byte)
+          if (byte === 0x20) {
+            bytesQueue.push(byte)
+          }
           else {
             bytesQueue.length = 0
             sum = 0
           }
         }
         // So far, we have 3 bytes in the queue: 0xAA, 0xAA, 0x20. Next 32 bytes should be the data packet.
-        else if (3 <= bytesQueue.length && bytesQueue.length <= 34) {
+        else if (bytesQueue.length >= 3 && bytesQueue.length <= 34) {
           sum += byte
           bytesQueue.push(byte)
         }
         else if (bytesQueue.length === 35) {
-          if (((~sum) & 0xff) === byte) {
+          if (((~sum) & 0xFF) === byte) {
             self.postMessage(bytesQueue[32])
             attentionLevelStats.set(performance.now() - startTimestamp, bytesQueue[32])
           }
@@ -71,7 +75,8 @@ self.addEventListener('message', async (event) => {
   }
 })
 
-/** Reference (Chinese):
+/**
+ * Reference (Chinese):
  * 0   AA 同步  <--- Verification
  * 1   AA 同步  <--- Verification
  * 2   20 是十进制的32，即有32个字节的payload，除掉20本身+两个AA同步+最后校验和 <-- Big Packet Indicator

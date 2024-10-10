@@ -10,11 +10,11 @@ export class PencilLinesMaterial extends THREE.ShaderMaterial {
         uNormals: { value: null },
         uTexture: { value: null },
         uResolution: {
-          value: new THREE.Vector2(1, 1)
-        }
+          value: new THREE.Vector2(1, 1),
+        },
       },
       fragmentShader,
-      vertexShader
+      vertexShader,
     })
   }
 }
