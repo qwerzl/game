@@ -41,7 +41,7 @@ export class Mountain {
       this.createGround()
       const tree = this.world.loadedFbx.tree
       tree.scale.set(0.5, 0.5, 0.5)
-      tree.traverse((m) => {
+      tree.traverse((m: any) => {
         if (m.type === 'SkinnedMesh' || m.type === 'Mesh') {
           m.castShadow = true
         }
@@ -87,7 +87,7 @@ export class Mountain {
       ground,
       leftWall,
       rightWall,
-    });
+    })
   }
 
   disposeGround(index: number) {
@@ -96,17 +96,17 @@ export class Mountain {
     let ground = grounds.find(g => g.index === index)
     this.world.scene!.remove(ground)
     grounds.splice(grounds.indexOf(ground), 1)
-    ground.ground.traverse((t) => {
+    ground.ground.traverse((t: any) => {
       if (typeof t.dispose === 'function') {
         t.dispose()
       }
     })
-    ground.leftWall.traverse((t) => {
+    ground.leftWall.traverse((t: any) => {
       if (typeof t.dispose === 'function') {
         t.dispose()
       }
     });
-    ground.rightWall.traverse((t) => {
+    ground.rightWall.traverse((t: any) => {
       if (typeof t.dispose === 'function') {
         t.dispose()
       }
@@ -140,12 +140,12 @@ export class Mountain {
     return tree
   }
 
-  disposeTree(tree) {
+  disposeTree(tree: any) {
     // TODO: check proper disposal
     const trees = this.trees
     this.world.scene!.remove(tree)
     trees.splice(trees.indexOf(tree), 1)
-    tree.traverse((t) => {
+    tree.traverse((t: any) => {
       if (typeof t.dispose === 'function') {
         t.dispose()
       }
@@ -156,7 +156,7 @@ export class Mountain {
   checkCollision() {
     const trees = this.trees
     const player = this.player
-    const playerBox = new Box3().setFromObject(player.model)
+    const playerBox = new Box3().setFromObject(player.model!)
 
     if (
       player.position.x < -this.STAGE_WIDTH / 2
@@ -173,7 +173,7 @@ export class Mountain {
     })
   }
 
-  render(t) {
+  render() {
     const p = this.player
     let trees = this.trees.slice()
 

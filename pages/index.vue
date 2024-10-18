@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
-import eegConfig from '~/components/custom/home/eegConfig.vue'
-import Settings from '~/components/custom/home/settings.vue'
-import { useEegConfigStore } from '~/stores/config'
+import eegConfig from "~/components/custom/home/eegConfig.vue";
+import Settings from "~/components/custom/home/settings.vue";
+import { useEegConfigStore } from "~/stores/config";
 
-const config = useEegConfigStore()
+const config = useEegConfigStore();
 
 async function beginGame(eeg: boolean) {
-  config.enabled = eeg
-  await navigateTo('/game')
+  config.enabled = eeg;
+  await navigateTo("/game");
 }
 </script>
 
 <template>
-  <div class="container relative h-screen flex items-center justify-center max-w-none px-0">
+  <div
+    class="container relative h-screen flex items-center justify-center max-w-none px-0"
+  >
     <eeg-config class="absolute md:right-4 md:top-4 right-2 top-2" />
 
     <div>
@@ -29,11 +31,11 @@ async function beginGame(eeg: boolean) {
           </AspectRatio>
         </div>
       </div>
-      <div class="mx-auto flex w-full flex-col justify-center space-y-6 max-w-[350px]">
+      <div
+        class="mx-auto flex w-full flex-col justify-center space-y-6 max-w-[350px]"
+      >
         <div class="flex flex-col space-y-2 text-center">
-          <h1 class="text-2xl font-semibold tracking-tight">
-            MindSki
-          </h1>
+          <h1 class="text-2xl font-semibold tracking-tight">MindSki</h1>
           <p class="text-sm text-muted-foreground">
             Click a button to continue
           </p>
@@ -45,10 +47,8 @@ async function beginGame(eeg: boolean) {
                 <Button :disabled="!config.port" @click="beginGame(true)">
                   Play with EEG
                 </Button>
-                <Button @click="beginGame(false)">
-                  Play without EEG
-                </Button>
-                <Settings variant="outline" class="w-max" />
+                <Button @click="beginGame(false)"> Play without EEG </Button>
+                <Settings variant="outline" />
               </div>
             </div>
           </div>

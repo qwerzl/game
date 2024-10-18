@@ -1,18 +1,19 @@
-const attentionLevelStats = new Map<number, number>
+const attentionLevelStats = new Map<number, number>();
+const averagedAttentionLevelStats = new Map<number, number>();
 
 async function serialDataCollection() {
-  const startTimestamp = performance.now()
+  const startTimestamp = performance.now();
 
-  const bytesQueue: number[] = []
+  const bytesQueue: number[] = [];
   const ports = await navigator.serial.getPorts();
-  const port = ports[0]
-  await port.open({ baudRate: 57600 })
+  const port = ports[0];
+  await port.open({ baudRate: 57600 });
 
-  let sum = 0
+  let sum = 0;
 
   const reader = port.readable?.getReader();
 
-// Listen to data coming from the serial device.
+  // Listen to data coming from the serial device.
   while (true) {
     if (reader) {
       const { value, done } = await reader.read();
@@ -24,52 +25,79 @@ async function serialDataCollection() {
 
       // Begin parsing the data.
       for (const byte of value) {
-        if ((bytesQueue.length) === 0 && byte === 0xAA) {
+        if (bytesQueue.length === 0 && byte === 0xaa) {
           // First 0xAA: Sync
-          bytesQueue.push(byte)
-        }
-        else if (bytesQueue.length === 1 && byte === 0xAA) {
+          bytesQueue.push(byte);
+        } else if (bytesQueue.length === 1 && byte === 0xaa) {
           // Second 0xAA: Sync
-          if (byte === 0xAA) bytesQueue.push(byte)
+          if (byte === 0xaa) bytesQueue.push(byte);
           else {
-            bytesQueue.length = 0
-            sum = 0
+            bytesQueue.length = 0;
+            sum = 0;
           }
-        }
-        else if (bytesQueue.length === 2) {
+        } else if (bytesQueue.length === 2) {
           // 0x20: Packet Length, indicating it's a big packet of 32 bytes. We don't need small packets here.
-          if (byte === 0x20) bytesQueue.push(byte)
+          if (byte === 0x20) bytesQueue.push(byte);
           else {
-            bytesQueue.length = 0
-            sum = 0
+            bytesQueue.length = 0;
+            sum = 0;
           }
         }
         // So far, we have 3 bytes in the queue: 0xAA, 0xAA, 0x20. Next 32 bytes should be the data packet.
         else if (3 <= bytesQueue.length && bytesQueue.length <= 34) {
-          sum += byte
-          bytesQueue.push(byte)
-        }
-        else if (bytesQueue.length === 35) {
-          if (((~sum) & 0xff) === byte) {
-            self.postMessage(bytesQueue[32])
-            attentionLevelStats.set(performance.now() - startTimestamp, bytesQueue[32])
+          sum += byte;
+          bytesQueue.push(byte);
+        } else if (bytesQueue.length === 35) {
+          if ((~sum & 0xff) === byte) {
+            if (bytesQueue[32] !== 0) {
+              self.postMessage(bytesQueue[32]);
+              attentionLevelStats.set(
+                performance.now() - startTimestamp,
+                bytesQueue[32],
+              );
+              if (attentionLevelStats.size == 0) {
+                averagedAttentionLevelStats.set(
+                  performance.now() - startTimestamp,
+                  bytesQueue[32],
+                );
+              } else if (attentionLevelStats.size == 1) {
+                averagedAttentionLevelStats.set(
+                  performance.now() - startTimestamp,
+                  (bytesQueue[32] +
+                    Array.from(attentionLevelStats.values())[0]) /
+                    2,
+                );
+              } else {
+                averagedAttentionLevelStats.set(
+                  performance.now() - startTimestamp,
+                  (bytesQueue[32] +
+                    Array.from(attentionLevelStats.values())[
+                      attentionLevelStats.size - 1
+                    ] +
+                    Array.from(attentionLevelStats.values())[
+                      attentionLevelStats.size - 2
+                    ]) /
+                    attentionLevelStats.size,
+                );
+              }
+            }
           }
-          bytesQueue.length = 0
-          sum = 0
+          bytesQueue.length = 0;
+          sum = 0;
         }
       }
     }
   }
 }
 
-self.addEventListener('message', async (event) => {
-  if (event.data === 'start') {
-    await serialDataCollection()
+self.addEventListener("message", async (event) => {
+  if (event.data === "start") {
+    await serialDataCollection();
   }
-  if (event.data === 'stop') {
-    self.postMessage(attentionLevelStats)
+  if (event.data === "stop") {
+    self.postMessage(attentionLevelStats);
   }
-})
+});
 
 /** Reference (Chinese):
  * 0   AA 同步  <--- Verification

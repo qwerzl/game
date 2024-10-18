@@ -1,6 +1,17 @@
 <script lang="ts" setup>
+import { LineChart } from '@/components/ui/chart-line'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { onMounted } from 'vue'
 import { PencilLinesPass } from '~/composables/pencilLine/PencilLinesPass'
+
 import { Mountain } from '~/lib/mountain'
 
 import { Player } from '~/lib/player'
@@ -64,13 +75,19 @@ onMounted(async () => {
 
 <template>
   <ClientOnly>
-    <div class="absolute top-5 left-5 text-black text-xl" :class="{ hidden: dead }">
+    <div
+      class="absolute top-5 left-5 text-black text-xl"
+      :class="{ hidden: dead }"
+    >
       <div>
         {{ score }}
       </div>
     </div>
     <div class="absolute h-screen w-screen text-black">
-      <div class="h-screen flex items-center justify-center text-xl font-bold" :class="{ hidden: !dead }">
+      <div
+        class="h-screen flex items-center justify-center text-xl font-bold"
+        :class="{ hidden: !dead }"
+      >
         <div class="flex-col items-center space-y-2">
           <div class="h-full text-center">
             You scored
@@ -78,14 +95,43 @@ onMounted(async () => {
           <div class="h-full text-center text-6xl">
             {{ score }}
           </div>
-          <div class="h-full text-center flex">
-            <p>
-              Press
-            </p>
-            <kbd class="mx-2 text-xs">Enter</kbd>
-            <p>
-              to restart
-            </p>
+          <div class="h-full text-center flex space-x-2">
+            <Button>
+              Play Again
+            </Button>
+            <Dialog>
+              <DialogTrigger as-child>
+                <Button>
+                  Edit Profile
+                </Button>
+              </DialogTrigger>
+              <DialogContent class="md:max-w-[700px] sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Attention Level Statistics</DialogTitle>
+                  <DialogDescription>
+                    View the changes of your attention level throughout the game here.
+                  </DialogDescription>
+                </DialogHeader>
+                <LineChart
+                  v-if="dead && config.stats"
+                  :data="Array.from(config.stats, ([key, value]) => ({ 'time': Math.round(key / 1000), 'Attention Level': value }))"
+                  index="time"
+                  :categories="['Attention Level']"
+                  :x-formatter="(tick, i) => {
+                    return typeof tick === 'number'
+                      ? `${tick}s`
+                      : ''
+                  }"
+                  :y-formatter="(tick, i) => {
+                    return typeof tick === 'number'
+                      ? `${tick}%`
+                      : ''
+                  }"
+                />
+                <DialogFooter>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
@@ -110,8 +156,8 @@ kbd {
   border-radius: 3px;
   border: 1px solid #b4b4b4;
   box-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.2),
-      0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
   color: #333;
   display: inline-block;
   font-size: 0.85em;
