@@ -9,6 +9,9 @@ import {
   Vector3,
 } from 'three'
 import type { World } from '~/lib/world'
+import { useEegConfigStore } from "~/stores/config";
+
+const config = useEegConfigStore()
 
 export class Player {
   world: World
@@ -210,9 +213,15 @@ export class Player {
     // const moveZ = this.moveForward || this.moveBackward
 
     // Acceleration
-    this.speed += t * 9.81
+    // this.speed += t * 9.81
     // Maximum velocity
-    this.speed = Math.min(this.speed, 500)
+    if (this.speed + t * 9.81 > 200) {
+      // Has passed starting acceleration
+      this.speed += (config.aimAttentionLevel - config.currentAttentionLevel) * 1.5 * t // TODO: Get the best weight
+    }
+    else {
+      this.speed += t * 9.81
+    }
 
     // Calculate displacement vectors
     // const trueBearingX = t * this.speed * Math.cos(this.bearing + Math.PI / 2)
