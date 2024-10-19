@@ -10,6 +10,8 @@ export const useEegConfigStore = defineStore("eegConfigStore", {
     connected: false,
     enabled: false,
     currentAttentionLevel: 0,
+    aimAttentionLevel: 80,
+    lives: 5,
   }),
   actions: {
     async connectEeg() {
@@ -42,9 +44,9 @@ export const useEegConfigStore = defineStore("eegConfigStore", {
       );
     },
     stopCollection() {
-      this.worker.postMessage("stop");
+      this.worker.postMessage('stop')
       this.worker.addEventListener(
-        "message",
+        'message',
         (e) => {
           if (Array.isArray(e.data)) {
             this.stats = e.data[0];
@@ -55,5 +57,8 @@ export const useEegConfigStore = defineStore("eegConfigStore", {
         false,
       );
     },
+    resetLives() {
+      this.lives = 5
+    }
   },
 });

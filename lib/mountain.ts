@@ -3,6 +3,8 @@ import { cloneFbx } from '~/composables/cloneFbx'
 import type { Player } from '~/lib/player'
 import type { World } from '~/lib/world'
 
+const config = useEegConfigStore()
+
 export class Mountain {
   world: World
   player: Player
@@ -18,7 +20,7 @@ export class Mountain {
     this.world = world
     this.player = player
 
-    this.N_VISIBLE_TREES = 10
+    this.N_VISIBLE_TREES = 15
     this.TREES_LOD = 1000
     this.STAGE_WIDTH = 750
     this.STAGE_LENGTH = 10000
@@ -105,7 +107,7 @@ export class Mountain {
       if (typeof t.dispose === 'function') {
         t.dispose()
       }
-    });
+    })
     ground.rightWall.traverse((t: any) => {
       if (typeof t.dispose === 'function') {
         t.dispose()
@@ -166,9 +168,21 @@ export class Mountain {
     }
 
     trees.forEach((tree) => {
-      const intersects = playerBox.intersectsBox(tree.collisionBoundingBox)
+      const intersects = playerBox.intersectsBox(tree
+        .collisionBoundingBox)
       if (intersects) {
-        player.die()
+        if (config.lives > 1) {
+          config.lives--
+          this.disposeTree(tree)
+          document.querySelector('html')?.classList.add('shaking')
+          setTimeout(() => {
+            document.querySelector('html')?.removeAttribute('class')
+          }, 1000)
+        }
+        else {
+          config.resetLives()
+          player.die()
+        }
       }
     })
   }

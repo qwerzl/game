@@ -79,6 +79,9 @@ onMounted(async () => {
       class="absolute top-5 left-5 text-black text-xl"
       :class="{ hidden: dead }"
     >
+      <div class="flex">
+        <Icon v-for="i in config.lives" :key="i" name="material-symbols:circle" class="w-4 h-4 grayscale" />
+      </div>
       <div>
         {{ score }}
       </div>
@@ -113,10 +116,11 @@ onMounted(async () => {
                   </DialogDescription>
                 </DialogHeader>
                 <LineChart
-                  v-if="dead && config.stats"
-                  :data="Array.from(config.stats, ([key, value]) => ({ 'time': Math.round(key / 1000), 'Attention Level': value }))"
+                  v-if="dead && config.averagedStats"
+                  :data="Array.from(config.averagedStats, ([key, value]) => ({ 'time': Math.round(key / 1000), 'Attention Level': Math.round(value) }))"
                   index="time"
                   :categories="['Attention Level']"
+                  :margin="{ top: 100, bottom: 0 }"
                   :x-formatter="(tick, i) => {
                     return typeof tick === 'number'
                       ? `${tick}s`
@@ -165,5 +169,23 @@ kbd {
   line-height: 1;
   padding: 2px 4px;
   white-space: nowrap;
+}
+
+.shaking {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 </style>

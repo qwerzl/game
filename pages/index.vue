@@ -5,11 +5,11 @@ import eegConfig from "~/components/custom/home/eegConfig.vue";
 import Settings from "~/components/custom/home/settings.vue";
 import { useEegConfigStore } from "~/stores/config";
 
-const config = useEegConfigStore();
+const config = useEegConfigStore()
 
 async function beginGame(eeg: boolean) {
-  config.enabled = eeg;
-  await navigateTo("/game");
+  config.enabled = eeg
+  await navigateTo('/game')
 }
 </script>
 
