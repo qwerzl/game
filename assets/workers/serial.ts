@@ -57,7 +57,6 @@ async function serialDataCollection() {
         else if (bytesQueue.length === 35) {
           if ((~sum & 0xFF) === byte) {
             if (bytesQueue[32] !== 0) {
-              self.postMessage(bytesQueue[32])
               attentionLevelStats.set(
                 performance.now() - startTimestamp,
                 bytesQueue[32],
@@ -86,6 +85,9 @@ async function serialDataCollection() {
                   / 4,
                 )
               }
+              self.postMessage(Array.from(averagedAttentionLevelStats.values())[
+                averagedAttentionLevelStats.size - 1
+              ])
             }
           }
           bytesQueue.length = 0
@@ -102,6 +104,7 @@ self.addEventListener('message', async (event) => {
   }
   if (event.data === 'stop') {
     self.postMessage([attentionLevelStats, averagedAttentionLevelStats])
+    this.close()
   }
 })
 

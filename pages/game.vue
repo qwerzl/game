@@ -52,7 +52,7 @@ onMounted(async () => {
         }
         else {
           config.stopCollection()
-          console.log(config.stats)
+          console.log(config.averagedStats)
           dead.value = true
         }
       })
@@ -80,7 +80,7 @@ onMounted(async () => {
       :class="{ hidden: dead }"
     >
       <div class="flex">
-        <Icon v-for="i in config.lives" :key="i" name="material-symbols:circle" class="w-4 h-4 grayscale" />
+        <Icon v-for="i in [...Array(config.lives).keys()]" :key="i" name="material-symbols:circle" class="w-4 h-4 grayscale" />
       </div>
       <div>
         {{ score }}

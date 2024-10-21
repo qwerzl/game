@@ -59,7 +59,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
       :margin="{ left: 20, right: 20 }"
       :data="data"
       :style="{ height: isMounted ? '100%' : 'auto' }"
-      :y-domain="[0, 100]"
+      :y-domain="[40, 100]"
     >
       <ChartCrosshair v-if="showTooltip" :colors="colors" :items="legendItems" :index="index" :custom-tooltip="customTooltip" />
 
