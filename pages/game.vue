@@ -105,7 +105,7 @@ onMounted(async () => {
             <Dialog>
               <DialogTrigger as-child>
                 <Button>
-                  Edit Profile
+                  View Statistics
                 </Button>
               </DialogTrigger>
               <DialogContent class="md:max-w-[700px] sm:max-w-[425px]">
