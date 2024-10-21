@@ -34,7 +34,6 @@ export const useEegConfigStore = defineStore('eegConfigStore', {
       }
     },
     startCollection() {
-      this.resetStats()
       this.worker = new DataCollectionWorker()
       this.worker.postMessage('start')
       this.worker.addEventListener(
