@@ -33,7 +33,6 @@ const score = ref(0)
 onMounted(async () => {
   function initiateGame() {
     if (config.enabled) {
-      console.log('EEG enabled')
       config.startCollection()
     }
 
@@ -48,11 +47,9 @@ onMounted(async () => {
       world.onRender(() => {
         if (!player.timeOfDeath) {
           score.value = Math.round(world.clock!.elapsedTime * 10)
-          console.log(config.currentAttentionLevel)
         }
         else {
           config.stopCollection()
-          console.log(config.averagedStats)
           dead.value = true
         }
       })
@@ -132,8 +129,7 @@ onMounted(async () => {
                       : ''
                   }"
                 />
-                <DialogFooter>
-                </DialogFooter>
+                <DialogFooter />
               </DialogContent>
             </Dialog>
           </div>
