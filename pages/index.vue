@@ -48,7 +48,7 @@ async function beginGame(eeg: boolean) {
                   Play with EEG
                 </Button>
                 <Button @click="beginGame(false)"> Play without EEG </Button>
-                <Settings variant="outline" />
+<!--                <Settings variant="outline" />-->
               </div>
             </div>
           </div>
