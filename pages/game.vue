@@ -98,13 +98,13 @@ onMounted(async () => {
           <div class="h-full text-center text-6xl">
             {{ score }}
           </div>
-          <div class="h-full text-center flex space-x-2">
-            <Button>
+          <div class="h-full text-center flex items-center w-full">
+            <Button class="w-full">
               Play Again
             </Button>
-            <Dialog>
+            <Dialog v-if="config.enabled">
               <DialogTrigger as-child>
-                <Button>
+                <Button class="pl-2">
                   View Statistics
                 </Button>
               </DialogTrigger>
