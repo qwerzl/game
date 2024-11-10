@@ -11,9 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { onMounted } from 'vue'
 import { PencilLinesPass } from '~/composables/pencilLine/PencilLinesPass'
-
 import { Mountain } from '~/lib/mountain'
-
 import { Player } from '~/lib/player'
 import { RpgCamera } from '~/lib/rpgCamera'
 import { World } from '~/lib/world'
@@ -97,7 +95,7 @@ onMounted(async () => {
           </div>
           <div class="h-full text-center flex items-center w-full">
             <Button class="w-full">
-              Play Again
+              Press Enter to Restart
             </Button>
             <Dialog v-if="config.enabled">
               <DialogTrigger as-child>
